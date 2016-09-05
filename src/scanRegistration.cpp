@@ -266,9 +266,9 @@ void laserCloudHandler(const sensor_msgs::PointCloud2ConstPtr& laserCloudMsg)
     point.y = -laserCloudIn.points[i].y;
     point.z = -(laserCloudIn.points[i].z*c8-laserCloudIn.points[i].x*s8);
 */
-    point.x =-laserCloudIn.points[i].x;
+    point.x =-laserCloudIn.points[i].z;
     point.y =-laserCloudIn.points[i].y;
-	point.z =-laserCloudIn.points[i].z;
+	point.z =-laserCloudIn.points[i].x;
 
     float angle = atan(point.y / sqrt(point.x * point.x + point.z * point.z)) * 180 / M_PI;
     int scanID;
