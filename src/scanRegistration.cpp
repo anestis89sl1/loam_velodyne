@@ -240,32 +240,7 @@ void laserCloudHandler(const sensor_msgs::PointCloud2ConstPtr& laserCloudMsg)
   int count = cloudSize;
   PointType point;
   std::vector<pcl::PointCloud<PointType> > laserCloudScans(N_SCANS);
-  float theta=M_PI/2;
-  float c8=cos(theta);
-  float s8=sin(theta);
   for (int i = 0; i < cloudSize; i++) {
-// z y x :-c-b-a,
-// z y-x :-c-b aF,
-// z-y x :-c b-aFR,an einai sostes oi goneies edw na dokimasw na pros8esw pi/2
-// z-y-x :-c b aFL 
-//-z-y-x : c b aBR 
-// x y z :-a-b-c,
-// x y-z :-a-b c,
-// x-y z :no
-// x-y-z :no-correct angles
-//-x-y z :no
-    //point.x = laserCloudIn.points[i].x;
-    //point.y = laserCloudIn.points[i].y;
-    //point.z = laserCloudIn.points[i].z;
-
-    //point.z =-laserCloudIn.points[i].x*c8-laserCloudIn.points[i].z*s8;
-    //point.y = -laserCloudIn.points[i].y;
-    //point.x =-laserCloudIn.points[i].z*c8+laserCloudIn.points[i].x*s8;
-	/* Good-mono la8os oi gonies
-	 * */
-    //point.x = -(laserCloudIn.points[i].x*c8 +laserCloudIn.points[i].z*s8) ;
-    //point.y = -laserCloudIn.points[i].y;
-    //point.z = -(laserCloudIn.points[i].z*c8-laserCloudIn.points[i].x*s8);
 
     point.x =laserCloudIn.points[i].x;
     point.y =laserCloudIn.points[i].y;
