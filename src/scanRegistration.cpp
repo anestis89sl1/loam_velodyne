@@ -47,6 +47,7 @@
 #include <sensor_msgs/PointCloud2.h>
 #include <tf/transform_datatypes.h>
 #include <tf/transform_broadcaster.h>
+#include <pcl/filters/approximate_voxel_grid.h>
 
 using std::sin;
 using std::cos;
@@ -210,6 +211,7 @@ void AccumulateIMUShift()
 
 void laserCloudHandler(const sensor_msgs::PointCloud2ConstPtr& laserCloudMsg)
 {
+
   if (!systemInited) {
     systemInitCount++;
     if (systemInitCount >= systemDelay) {
@@ -226,6 +228,15 @@ void laserCloudHandler(const sensor_msgs::PointCloud2ConstPtr& laserCloudMsg)
   pcl::fromROSMsg(*laserCloudMsg, laserCloudIn);
   std::vector<int> indices;
   pcl::removeNaNFromPointCloud(laserCloudIn, laserCloudIn, indices);
+
+#ifdef DOWNSAMPLE
+	pcl::PointCloud<pcl::PointXYZ>::Ptr non_filtered_cloud (new pcl::PointCloud<pcl::PointXYZ>);
+	copyPointCloud(laserCloudIn,*non_filtered_cloud);
+	pcl::ApproximateVoxelGrid<pcl::PointXYZ> approximate_voxel_filter;
+	approximate_voxel_filter.setLeafSize (0.33, 0.33, 0.33);
+	approximate_voxel_filter.setInputCloud (non_filtered_cloud);
+	approximate_voxel_filter.filter (laserCloudIn);
+#endif
   int cloudSize = laserCloudIn.points.size();
   float startOri = -atan2(laserCloudIn.points[0].y, laserCloudIn.points[0].x);
   float endOri = -atan2(laserCloudIn.points[cloudSize - 1].y,

@@ -1,0 +1,26 @@
+<launch>
+
+  <arg name="rviz" default="true" />
+  <remap from="velodyne_points" to="/kitti_player/hdl64e"/>
+
+  <node pkg="loam_velodyne" type="scanRegistration" name="scanRegistration" output="screen" launch-prefix="urxvt -e gdb -ex run --args"/>
+
+  <node pkg="loam_velodyne" type="laserOdometry" name="laserOdometry" output="screen" respawn="true" launch-prefix="urxvt -e gdb -ex run --args">
+  </node>
+
+  <node pkg="loam_velodyne" type="laserMapping" name="laserMapping" output="screen" launch-prefix="urxvt -e gdb -ex run --args"/>
+  <node pkg="loam_velodyne" type="transformMaintenance" name="transformMaintenance" output="screen" launch-prefix="urxvt -e gdb -ex run --args"/>
+	<node pkg="velodyne_pointcloud" type="cloud_node" name="cloud_node">
+		<param name="calibration" value="$(find generalp)/config/vlp16.yaml"/>
+		<param name="min_range" value="0.4"/>
+		<param name="max_range" value="35.0"/>
+	</node>
+  
+
+  <group if="$(arg rviz)">
+    <node launch-prefix="nice" pkg="rviz" type="rviz" name="rviz" args="-d $(find loam_velodyne)/rviz_cfg/loam_velodyne.rviz" />
+  </group>
+  <!--node pkg="tf" type="static_transform_publisher" name="static_transform_publisher3" args="0 0 0 1.58 1 0.2 base_link camera_init 50"/-->
+  <node pkg="tf" type="static_transform_publisher" name="static_transform_publisher3" args="0 0 0 0 0 1.57079  world camera_init 50"/>
+<param name="use_sim_time" value="false" />
+</launch>
